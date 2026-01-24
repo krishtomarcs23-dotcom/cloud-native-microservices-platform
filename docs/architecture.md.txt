@@ -1,0 +1,25 @@
+# Cloud Native Microservices Architecture
+
+Frontend: React
+Backend: Spring Boot Microservices
+Database: Azure PostgreSQL
+Containerization: Docker
+Orchestration: Kubernetes (GKE)
+Ingress: NGINX Ingress Controller
+
+Services:
+- Customer Service (8081)
+- Product Service (8082)
+- Order Service (8083)
+
+Architecture Flow:
+
+React App
+     |
+API Gateway (Future)
+     |
+---------------------------------
+|               |               |
+Customer MS     Product MS      Order MS
+     |               |               |
+Azure PostgreSQL Databases (Separate DB per Service)
