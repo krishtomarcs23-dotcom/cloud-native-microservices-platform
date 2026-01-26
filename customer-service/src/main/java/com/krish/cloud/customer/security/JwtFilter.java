@@ -6,12 +6,20 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Collections;
 
+@Component
 public class JwtFilter extends OncePerRequestFilter {
+
+    private final JwtUtil jwtUtil;
+
+    public JwtFilter(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
+    }
 
     @Override
     protected void doFilterInternal(
@@ -22,7 +30,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String path = request.getServletPath();
 
-        if (path.startsWith("/auth") || path.startsWith("/h2-console")) {
+        // ✅ Skip login + H2
+        if (path.startsWith("/customers/login") || path.startsWith("/h2-console")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -34,23 +43,25 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        try {
-            String token = header.substring(7);
-            String username = JwtUtil.validateTokenAndGetUsername(token);
+        String token = header.substring(7);
 
-            UsernamePasswordAuthenticationToken auth =
-                    new UsernamePasswordAuthenticationToken(
-                            username,
-                            null,
-                            Collections.emptyList()
-                    );
-
-            SecurityContextHolder.getContext().setAuthentication(auth);
-
-        } catch (Exception e) {
+        // ✅ Validate JWT
+        if (!jwtUtil.validateToken(token)) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
+
+        // ✅ Extract user
+        String username = jwtUtil.extractUsername(token);
+
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(
+                        username,
+                        null,
+                        Collections.emptyList()
+                );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(request, response);
     }

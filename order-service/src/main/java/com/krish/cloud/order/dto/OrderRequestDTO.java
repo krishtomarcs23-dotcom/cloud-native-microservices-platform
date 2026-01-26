@@ -1,27 +1,21 @@
-package com.krish.cloud.order.entity;
+package com.krish.cloud.order.dto;
 
-import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 
-@Entity
-@Table(name = "orders")
-public class Order {
+public class OrderRequestDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    @NotBlank(message = "Product name is required")
     private String productName;
 
+    @Min(value = 1, message = "Quantity must be at least 1")
     private int quantity;
 
+    @Positive(message = "Price must be greater than 0")
     private double price;
 
-    // ---- getters & setters ----
-
-    public Long getId() {
-        return id;
-    }
-
+    // getters & setters
     public String getProductName() {
         return productName;
     }
