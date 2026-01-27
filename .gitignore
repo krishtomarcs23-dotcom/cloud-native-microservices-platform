@@ -1,12 +1,12 @@
-# ===== Maven build output =====
+# ===== Maven =====
 **/target/
 
-# ===== IDE files =====
+# ===== IDE =====
 **/.idea/
 **/.classpath
 **/.project
 **/.settings/
 
-# ===== OS files =====
+# ===== OS =====
 .DS_Store
 Thumbs.db
