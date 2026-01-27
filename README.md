@@ -35,4 +35,38 @@ C:\USERS\KRISH\DOCUMENTS\CLOUD-NATIVE-MICROSERVICES-PLATFORM\CUSTOMER-SERVICE\SR
                 │       SecurityConfig.java
                 │
                 └───service
+  C:\USERS\KRISH\DOCUMENTS\CLOUD-NATIVE-MICROSERVICES-PLATFORM\ORDER-SERVICE\SRC\MAIN\JAVA
+└───com
+    └───krish
+        └───cloud
+            └───order
+                │   OrderServiceApplication.java
+                │
+                ├───controller
+                │       OrderController.java
+                │
+                ├───dto
+                │       OrderRequestDTO.java
+                │       OrderResponseDTO.java
+                │
+                ├───entity
+                │       Order.java
+                │
+                ├───exception
+                │       GlobalExceptionHandler.java
+                │       OrderNotFoundException.java
+                │
+                ├───repository
+                │       OrderRepository.java
+                │
+                ├───security
+                │       JwtAuthenticationFilter.java
+                │       JwtUtil.java
+                │       SecurityConfig.java
+                │
+                └───service
+                    │   OrderService.java
+                    │
+                    └───impl
+                            OrderServiceImpl.java
                         CustomerService.java
