@@ -24,6 +24,10 @@ public class CustomerService {
 
     return customerRepository.save(existingCustomer);
 }
+public void validateCustomer(String email) {
+    customerRepository.findByEmail(email)
+        .orElseThrow(() -> new RuntimeException("Customer not found"));
+}
 
     public Customer createCustomer(Customer customer) {
         return customerRepository.save(customer);

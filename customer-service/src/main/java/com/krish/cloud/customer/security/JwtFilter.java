@@ -22,47 +22,49 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
+protected void doFilterInternal(
+        HttpServletRequest request,
+        HttpServletResponse response,
+        FilterChain filterChain
+) throws ServletException, IOException {
 
-        String path = request.getServletPath();
+    String path = request.getServletPath();
 
-        // ✅ Skip login + H2
-        if (path.startsWith("/customers/login") || path.startsWith("/h2-console")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        String header = request.getHeader("Authorization");
-
-        if (header == null || !header.startsWith("Bearer ")) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
-
-        String token = header.substring(7);
-
-        // ✅ Validate JWT
-        if (!jwtUtil.validateToken(token)) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
-
-        // ✅ Extract user
-        String username = jwtUtil.extractUsername(token);
-
-        UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(
-                        username,
-                        null,
-                        Collections.emptyList()
-                );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
+    // ✅ Skip public endpoints
+    if (
+        path.equals("/customers") ||
+        path.startsWith("/customers/login") ||
+        path.startsWith("/h2-console")
+    ) {
         filterChain.doFilter(request, response);
+        return;
     }
+
+    String header = request.getHeader("Authorization");
+
+    if (header == null || !header.startsWith("Bearer ")) {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        return;
+    }
+
+    String token = header.substring(7);
+
+    if (!jwtUtil.validateToken(token)) {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        return;
+    }
+
+    String username = jwtUtil.extractUsername(token);
+
+    UsernamePasswordAuthenticationToken authentication =
+            new UsernamePasswordAuthenticationToken(
+                    username,
+                    null,
+                    Collections.emptyList()
+            );
+
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+
+    filterChain.doFilter(request, response);
+}
 }

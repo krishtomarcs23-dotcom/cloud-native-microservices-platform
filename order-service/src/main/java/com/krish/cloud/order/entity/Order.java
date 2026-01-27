@@ -1,6 +1,7 @@
 package com.krish.cloud.order.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "orders")
@@ -10,11 +11,25 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String productName;
 
+    @Column(nullable = false)
     private int quantity;
 
+    @Column(nullable = false)
     private double price;
+
+    @Column(nullable = false)
+    private String status;
+
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        this.status = "CREATED";
+    }
 
     // ---- getters & setters ----
 
@@ -44,5 +59,13 @@ public class Order {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 }
