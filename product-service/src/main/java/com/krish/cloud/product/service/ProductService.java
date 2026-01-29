@@ -15,15 +15,16 @@ public class ProductService {
         this.repository = repository;
     }
 
-    public Product saveProduct(Product product) {
+    public Product create(Product product) {
         return repository.save(product);
     }
 
-    public List<Product> getAllProducts() {
+    public List<Product> getAll() {
         return repository.findAll();
     }
 
-    public Product getProductById(Long id) {
-        return repository.findById(id).orElse(null);
+    public Product getById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
     }
 }
