@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: product-postgres
+    environment:
+      POSTGRES_DB: productdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - product_pgdata:/var/lib/postgresql/data
+
+  product-service:
+    image: product-service:2.0
+    container_name: product-service
+    depends_on:
+      - postgres
+    ports:
+      - "8093:8092"
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/productdb
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+
+volumes:
+  product_pgdata:
