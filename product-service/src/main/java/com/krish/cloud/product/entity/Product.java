@@ -10,11 +10,19 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private double price;
+
+    @Column(nullable = false)
     private int stock;
 
-    // getters & setters
+    // ✅ REQUIRED by Jackson
+    public Product() {}
+
+    // ✅ GETTERS (CRITICAL)
     public Long getId() {
         return id;
     }
@@ -23,20 +31,25 @@ public class Product {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
     public int getStock() {
         return stock;
+    }
+
+    // ✅ SETTERS
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public void setStock(int stock) {
